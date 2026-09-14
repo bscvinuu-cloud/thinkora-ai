@@ -1659,7 +1659,19 @@ async function sendChatQuestion() {
 
 }
 
+function newChat() {
+    chatHistory = [];
+    chatWindow.innerHTML = "";
+    chatSection.style.display = "none";
 
+    mainQuestion.value = "";
+    chatQuestion.value = "";
+
+    autoHeight(mainQuestion);
+    autoHeight(chatQuestion);
+
+    mainQuestion.focus();
+}
 </script>
 
 </body>
