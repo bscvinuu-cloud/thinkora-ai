@@ -1892,18 +1892,150 @@ function saveChatHistory() {
         JSON.stringify(history)
     );
 }
+function renderHistory() {
 
+    const list = document.getElementById("historyList");
 
-    
+    if (!list) return;
 
+    const history = getSavedChats();
 
-    
+    list.innerHTML = "";
 
+    if (history.length === 0) {
 
+        list.innerHTML = `
+            <div class="historyEmpty">
+                💬<br><br>
+                No conversations yet
+            </div>
+        `;
 
-            
-      
-    
+        return;
+    }
+
+    history.forEach((chat) => {
+
+        const item = document.createElement("div");
+
+        item.className = "historyItem";
+
+        item.innerHTML = `
+            <div class="historyIcon">💬</div>
+
+            <div class="historyText">
+                <div class="historyTitle">
+                    ${escapeHistoryText(chat.title)}
+                </div>
+
+                <div class="historyTime">
+                    ${chat.date}
+                </div>
+            </div>
+
+            <button class="historyDelete" title="More">
+                ⋮
+            </button>
+        `;
+
+        const moreButton =
+            item.querySelector(".historyDelete");
+
+        moreButton.onclick = function(event) {
+
+            event.stopPropagation();
+
+            document
+                .querySelectorAll(".historyMenu")
+                .forEach(menu => menu.remove());
+
+            const menu = document.createElement("div");
+
+            menu.className = "historyMenu";
+
+            menu.style.cssText = `
+                position:absolute;
+                right:45px;
+                top:45px;
+                width:140px;
+                background:#17121f;
+                border:1px solid rgba(255,255,255,0.15);
+                border-radius:12px;
+                padding:6px;
+                box-shadow:0 10px 30px rgba(0,0,0,0.5);
+                z-index:1000;
+            `;
+
+            menu.innerHTML = `
+                <button class="renameBtn">
+                    ✏️ Rename
+                </button>
+
+                <button class="deleteBtn">
+                    🗑️ Delete
+                </button>
+            `;
+
+            item.style.position = "relative";
+
+            item.appendChild(menu);
+
+            menu.querySelector(".renameBtn").onclick =
+                function(event) {
+
+                    event.stopPropagation();
+
+                    const newTitle = prompt(
+                        "Rename chat:",
+                        chat.title || "New Chat"
+                    );
+
+                    if (
+                        newTitle !== null &&
+                        newTitle.trim() !== ""
+                    ) {
+
+                        const chats = getSavedChats();
+
+                        const target = chats.find(
+                            c => c.id === chat.id
+                        );
+
+                        if (target) {
+
+                            target.title =
+                                newTitle.trim();
+
+                            localStorage.setItem(
+                                "thinkora_chat_history",
+                                JSON.stringify(chats)
+                            );
+
+                            renderHistory();
+                        }
+                    }
+                };
+
+            menu.querySelector(".deleteBtn").onclick =
+                function(event) {
+
+                    event.stopPropagation();
+
+                    if (
+                        confirm("Delete this chat?")
+                    ) {
+                        deleteHistoryChat(chat.id);
+                    }
+                };
+        };
+
+        item.onclick = function() {
+            openSavedChat(chat.id);
+        };
+
+        list.appendChild(item);
+    });
+}
 
 
 
