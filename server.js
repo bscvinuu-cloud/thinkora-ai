@@ -1,20 +1,15 @@
 const express = require("express");
+const OpenAI = require("openai");
 
 const app = express();
 
 app.use(express.json());
-
-/*
-  Thinkora website
-  index.html root folder mein hai.
-*/
 app.use(express.static("."));
 
+const client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
-/*
-  Thinkora AI API
-  Real AI brain hum next step mein connect karenge.
-*/
 app.post("/api/chat", async (req, res) => {
 
     try {
@@ -27,51 +22,55 @@ app.post("/api/chat", async (req, res) => {
             });
         }
 
-        const reply =
-`I received your question:
+        const response = await client.responses.create({
 
-"${message}"
+            model: "gpt-5.6-sol",
 
-🧠 Thinkora AI is thinking...
+            instructions: `
+You are Thinkora AI, a powerful and friendly AI study assistant.
 
-The real AI brain will be connected next.
+Your developer is INNOCENT VINUU.
 
-Thinkora will then be able to:
-• Understand complex questions
-• Solve problems
-• Explain topics
-• Create notes
-• Generate quizzes
-• Understand images
-• Read PDFs
-• Remember conversations
-• Give fast responses`;
+Help users with:
+- Study
+- Mathematics
+- Science
+- Programming
+- Notes
+- Summaries
+- Quizzes
+- Explanations
+- General questions
+
+Answer clearly and intelligently.
+Use simple language when the user asks for simple explanations.
+If the user speaks Hindi, answer in Hindi/Hinglish.
+If the user speaks Gujarati, answer in Gujarati.
+Be helpful, accurate and concise.
+`,
+
+            input: message
+
+        });
 
         res.json({
-            reply: reply
+            reply: response.output_text
         });
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Thinkora AI Error:", error);
 
         res.status(500).json({
-            error: "Thinkora server error"
+            error: "Thinkora AI could not generate a response."
         });
 
     }
 
 });
 
-
-const PORT =
-    process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-
-    console.log(
-        `Thinkora AI running on port ${PORT}`
-    );
-
+    console.log(`Thinkora AI running on port ${PORT}`);
 });
