@@ -1379,65 +1379,95 @@ const chatQuestion = document.getElementById("chatQuestion");
 const chatSection = document.getElementById("chatSection");
 const chatWindow = document.getElementById("chatWindow");
 
+/* THINKORA CHAT MEMORY */
+let chatHistory = [];
+
+
+/* AUTO HEIGHT */
 function autoHeight(element) {
     element.style.height = "auto";
     element.style.height =
         Math.min(element.scrollHeight, 150) + "px";
 }
 
-mainQuestion.addEventListener("input", function() {
-    autoHeight(this);
+mainQuestion.addEventListener("input", function () {
+    autoHeight(mainQuestion);
 });
 
-chatQuestion.addEventListener("input", function() {
-    autoHeight(this);
+chatQuestion.addEventListener("input", function () {
+    autoHeight(chatQuestion);
 });
 
+
+/* ENTER TO SEND */
 function mainEnter(event) {
+
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         sendMainQuestion();
     }
+
 }
 
 function chatEnter(event) {
+
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         sendChatQuestion();
     }
+
 }
 
+
+/* QUICK QUESTION */
 function setQuestion(text) {
+
     mainQuestion.value = text;
+
     autoHeight(mainQuestion);
+
     mainQuestion.focus();
+
 }
 
+
+/* THINKING ANIMATION */
 function showThinking() {
+
     return `
-        <div class="thinkingBubble">
+        <div class="thinkBubble">
             <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
         </div>
     `;
+
 }
 
+
+/* ADD MESSAGE */
 function addMessage(text, type) {
 
     const message = document.createElement("div");
+
     message.className = "message " + type;
 
     const bubble = document.createElement("div");
+
     bubble.className = "bubble";
+
     bubble.textContent = text;
 
     message.appendChild(bubble);
+
     chatWindow.appendChild(message);
 
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
 }
 
+
+/* MAIN QUESTION */
 async function sendMainQuestion() {
 
     const message = mainQuestion.value.trim();
@@ -1449,18 +1479,26 @@ async function sendMainQuestion() {
     addMessage(message, "user");
 
     mainQuestion.value = "";
+
     autoHeight(mainQuestion);
 
     const thinking = document.createElement("div");
 
     thinking.className = "message ai";
 
-    thinking.innerHTML =
-        `<div class="bubble">${showThinking()}</div>`;
+    thinking.innerHTML = showThinking();
 
     chatWindow.appendChild(thinking);
 
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+
+    /* SAVE USER MESSAGE */
+    chatHistory.push({
+        role: "user",
+        content: message
+    });
+
 
     try {
 
@@ -1473,25 +1511,39 @@ async function sendMainQuestion() {
             },
 
             body: JSON.stringify({
-                message: message
+                messages: chatHistory
             })
 
         });
+
 
         const data = await response.json();
 
         thinking.remove();
 
+
         if (!response.ok) {
+
             throw new Error(
                 data.error || "Server error"
             );
+
         }
 
-        addMessage(
-            data.reply || "No response received.",
-            "ai"
-        );
+
+        const reply =
+            data.reply || "No response received.";
+
+
+        addMessage(reply, "ai");
+
+
+        /* SAVE AI RESPONSE */
+        chatHistory.push({
+            role: "assistant",
+            content: reply
+        });
+
 
     } catch (error) {
 
@@ -1503,9 +1555,16 @@ async function sendMainQuestion() {
             "⚠️ Thinkora server se response nahi mila. Please try again.",
             "ai"
         );
+
+        /* REMOVE FAILED USER MESSAGE */
+        chatHistory.pop();
+
     }
+
 }
 
+
+/* CONTINUE CHAT */
 async function sendChatQuestion() {
 
     const message = chatQuestion.value.trim();
@@ -1515,18 +1574,27 @@ async function sendChatQuestion() {
     addMessage(message, "user");
 
     chatQuestion.value = "";
+
     autoHeight(chatQuestion);
+
 
     const thinking = document.createElement("div");
 
     thinking.className = "message ai";
 
-    thinking.innerHTML =
-        `<div class="bubble">${showThinking()}</div>`;
+    thinking.innerHTML = showThinking();
 
     chatWindow.appendChild(thinking);
 
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+
+    /* SAVE USER MESSAGE */
+    chatHistory.push({
+        role: "user",
+        content: message
+    });
+
 
     try {
 
@@ -1539,25 +1607,39 @@ async function sendChatQuestion() {
             },
 
             body: JSON.stringify({
-                message: message
+                messages: chatHistory
             })
 
         });
+
 
         const data = await response.json();
 
         thinking.remove();
 
+
         if (!response.ok) {
+
             throw new Error(
                 data.error || "Server error"
             );
+
         }
 
-        addMessage(
-            data.reply || "No response received.",
-            "ai"
-        );
+
+        const reply =
+            data.reply || "No response received.";
+
+
+        addMessage(reply, "ai");
+
+
+        /* SAVE AI RESPONSE */
+        chatHistory.push({
+            role: "assistant",
+            content: reply
+        });
+
 
     } catch (error) {
 
@@ -1569,8 +1651,14 @@ async function sendChatQuestion() {
             "⚠️ Something went wrong. Please try again.",
             "ai"
         );
+
+        /* REMOVE FAILED USER MESSAGE */
+        chatHistory.pop();
+
     }
+
 }
+
 
 </script>
 
