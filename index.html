@@ -1828,103 +1828,386 @@ async function sendChatQuestion() {
 
 }
 
-function newChat() {
-    chatHistory = [];
-    chatWindow.innerHTML = "";
-    chatSection.style.display = "none";
+/* ================================
+   THINKORA AI - COMPLETE CHAT HISTORY
+   Developed by INNOCENT VINUU
+================================ */
 
-    mainQuestion.value = "";
-    chatQuestion.value = "";
-
-    autoHeight(mainQuestion);
-    autoHeight(chatQuestion);
-
-    mainQuestion.focus();
-}
-      function saveChatHistory() {
-    const messages = chatWindow.innerHTML;
-
-    if (!messages.trim()) return;
-
-    const history = JSON.parse(
+function getSavedChats() {
+    return JSON.parse(
         localStorage.getItem("thinkora_chat_history") || "[]"
     );
+}
 
-    history.unshift({
+
+function saveChatHistory() {
+
+    if (!chatHistory || chatHistory.length === 0) {
+        return;
+    }
+
+    const firstUserMessage = chatHistory.find(
+        msg => msg.role === "user"
+    );
+
+    const title = firstUserMessage
+        ? firstUserMessage.content.substring(0, 45)
+        : "New Chat";
+
+    let history = getSavedChats();
+
+    const currentChat = {
+        id: Date.now(),
+        title: title,
         date: new Date().toLocaleString(),
-        messages: messages
-    });
+        messages: [...chatHistory]
+    };
+
+    /*
+       Agar same current chat already save hai
+       to duplicate nahi banega.
+    */
+    if (window.currentChatId) {
+
+        const existingIndex = history.findIndex(
+            chat => chat.id === window.currentChatId
+        );
+
+        if (existingIndex !== -1) {
+            history[existingIndex] = currentChat;
+        } else {
+            history.unshift(currentChat);
+        }
+
+    } else {
+
+        history.unshift(currentChat);
+
+    }
+
+    window.currentChatId = currentChat.id;
 
     localStorage.setItem(
         "thinkora_chat_history",
-        JSON.stringify(history.slice(0, 20))
+        JSON.stringify(history)
     );
-      }
-      function openHistory() {
+}
 
-    const panel = document.getElementById("chatHistoryPanel");
-    const list = document.getElementById("historyList");
-    const history = JSON.parse(
-        localStorage.getItem("thinkora_chat_history") || "[]"
-    );
+
+function renderHistory() {
+
+    const list =
+        document.getElementById("historyList");
+
+    if (!list) return;
+
+    const history = getSavedChats();
 
     list.innerHTML = "";
 
     if (history.length === 0) {
 
-        list.innerHTML =
-            '<div class="historyEmpty">No chats yet</div>';
+        list.innerHTML = `
+            <div class="historyEmpty">
+                💬<br><br>
+                No conversations yet
+            </div>
+        `;
 
-    } else {
-
-        history.forEach((chat, index) => {
-
-            const item = document.createElement("div");
-            item.className = "historyItem";
-
-            item.innerHTML = `
-                <div class="historyIcon">💬</div>
-
-                <div class="historyText">
-                    <div class="historyTitle">
-                        Chat ${history.length - index}
-                    </div>
-
-                    <div class="historyTime">
-                        ${chat.date}
-                    </div>
-                </div>
-
-                <div class="historyArrow">›</div>
-            `;
-
-            item.onclick = function() {
-
-                const chatWindow =
-                    document.getElementById("chatWindow");
-
-                const chatSection =
-                    document.getElementById("chatSection");
-
-                chatWindow.innerHTML = chat.messages;
-
-                chatSection.style.display = "block";
-
-                panel.classList.remove("open");
-
-                panel.style.transform = "translateX(-105%)";
-
-                chatWindow.scrollTop =
-                    chatWindow.scrollHeight;
-            };
-
-            list.appendChild(item);
-        });
+        return;
     }
 
+
+    history.forEach((chat, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "historyItem";
+
+
+        item.innerHTML = `
+
+            <div class="historyIcon">
+                💬
+            </div>
+
+            <div class="historyText">
+
+                <div class="historyTitle">
+                    ${escapeHistoryText(chat.title)}
+                </div>
+
+                <div class="historyTime">
+                    ${chat.date}
+                </div>
+
+            </div>
+
+            <button
+                class="historyDelete"
+                title="Delete chat"
+                onclick="event.stopPropagation(); deleteHistoryChat(${chat.id})">
+                ⋮
+            </button>
+
+        `;
+
+
+        item.onclick = function () {
+
+            openSavedChat(chat.id);
+
+        };
+
+
+        list.appendChild(item);
+
+    });
+}
+
+
+function escapeHistoryText(text) {
+
+    if (!text) return "New Chat";
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function openHistory() {
+
+    const panel =
+        document.getElementById("chatHistoryPanel");
+
+    if (!panel) return;
+
+
+    renderHistory();
+
+
     panel.classList.add("open");
-    panel.style.transform = "translateX(0)";
-      }
+
+    panel.style.transform =
+        "translateX(0)";
+}
+
+
+function closeHistory() {
+
+    const panel =
+        document.getElementById("chatHistoryPanel");
+
+    if (!panel) return;
+
+
+    panel.classList.remove("open");
+
+    panel.style.transform =
+        "translateX(-105%)";
+}
+
+
+function openSavedChat(id) {
+
+    const history =
+        getSavedChats();
+
+
+    const chat =
+        history.find(item => item.id === id);
+
+
+    if (!chat) return;
+
+
+    chatHistory =
+        [...chat.messages];
+
+
+    chatWindow.innerHTML = "";
+
+
+    chatHistory.forEach(message => {
+
+        addMessage(
+            message.content,
+            message.role === "user"
+                ? "user"
+                : "ai"
+        );
+
+    });
+
+
+    chatSection.style.display =
+        "block";
+
+
+    window.currentChatId =
+        chat.id;
+
+
+    closeHistory();
+
+
+    setTimeout(() => {
+
+        chatWindow.scrollTop =
+            chatWindow.scrollHeight;
+
+    }, 100);
+
+}
+
+
+function deleteHistoryChat(id) {
+
+    const history =
+        getSavedChats();
+
+
+    const newHistory =
+        history.filter(
+            chat => chat.id !== id
+        );
+
+
+    localStorage.setItem(
+        "thinkora_chat_history",
+        JSON.stringify(newHistory)
+    );
+
+
+    renderHistory();
+
+}
+
+
+function newChat() {
+
+    /*
+       Current conversation save karo
+       before starting a new chat.
+    */
+    saveChatHistory();
+
+
+    chatHistory = [];
+
+    window.currentChatId = null;
+
+
+    chatWindow.innerHTML = "";
+
+
+    chatSection.style.display =
+        "none";
+
+
+    mainQuestion.value = "";
+
+    chatQuestion.value = "";
+
+
+    autoHeight(mainQuestion);
+
+    autoHeight(chatQuestion);
+
+
+    closeHistory();
+
+
+    mainQuestion.focus();
+
+}
+
+
+/* =================================
+   AUTO SAVE
+   Har baar chat window change hone
+   par conversation automatically save
+================================= */
+
+let historySaveTimer = null;
+
+
+const historyObserver =
+    new MutationObserver(function () {
+
+        clearTimeout(historySaveTimer);
+
+
+        historySaveTimer = setTimeout(
+            function () {
+
+                if (
+                    chatHistory &&
+                    chatHistory.length > 0
+                ) {
+
+                    saveChatHistory();
+
+                }
+
+            },
+            700
+        );
+
+    });
+
+
+if (chatWindow) {
+
+    historyObserver.observe(
+        chatWindow,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+}
+
+
+/* =================================
+   HISTORY BUTTON CLOSE SUPPORT
+================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+
+            closeHistory();
+
+        }
+
+    }
+);
+
+
+/* =================================
+   PAGE LOAD
+================================= */
+
+window.addEventListener(
+    "load",
+    function () {
+
+        renderHistory();
+
+    }
+);
+
+    
+                    
 </script>
 
 </body>
