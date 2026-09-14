@@ -1861,37 +1861,69 @@ function newChat() {
     );
       }
       function openHistory() {
-    saveChatHistory();
 
     const panel = document.getElementById("chatHistoryPanel");
     const list = document.getElementById("historyList");
-
     const history = JSON.parse(
         localStorage.getItem("thinkora_chat_history") || "[]"
     );
 
     list.innerHTML = "";
 
-    if (!history.length) {
-        list.innerHTML = '<div class="historyEmpty">No chats yet</div>';
+    if (history.length === 0) {
+
+        list.innerHTML =
+            '<div class="historyEmpty">No chats yet</div>';
+
     } else {
+
         history.forEach((chat, index) => {
+
             const item = document.createElement("div");
             item.className = "historyItem";
 
             item.innerHTML = `
                 <div class="historyIcon">💬</div>
+
                 <div class="historyText">
-                    <div class="historyTitle">Chat ${history.length - index}</div>
-                    <div class="historyTime">${chat.date}</div>
+                    <div class="historyTitle">
+                        Chat ${history.length - index}
+                    </div>
+
+                    <div class="historyTime">
+                        ${chat.date}
+                    </div>
                 </div>
+
+                <div class="historyArrow">›</div>
             `;
+
+            item.onclick = function() {
+
+                const chatWindow =
+                    document.getElementById("chatWindow");
+
+                const chatSection =
+                    document.getElementById("chatSection");
+
+                chatWindow.innerHTML = chat.messages;
+
+                chatSection.style.display = "block";
+
+                panel.classList.remove("open");
+
+                panel.style.transform = "translateX(-105%)";
+
+                chatWindow.scrollTop =
+                    chatWindow.scrollHeight;
+            };
 
             list.appendChild(item);
         });
     }
 
-    panel.classList.toggle("open");
+    panel.classList.add("open");
+    panel.style.transform = "translateX(0)";
       }
 </script>
 
