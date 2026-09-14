@@ -4,8 +4,17 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static("public"));
+/*
+  Thinkora website
+  index.html root folder mein hai.
+*/
+app.use(express.static("."));
 
+
+/*
+  Thinkora AI API
+  Real AI brain hum next step mein connect karenge.
+*/
 app.post("/api/chat", async (req, res) => {
 
     try {
@@ -14,17 +23,29 @@ app.post("/api/chat", async (req, res) => {
 
         if (!message) {
             return res.status(400).json({
-                error: "Message required"
+                error: "Message is required"
             });
         }
 
-        // REAL AI CONNECTION NEXT STEP MEIN AAYEGA
-
         const reply =
-            "Thinkora received your question:\n\n" +
-            message +
-            "\n\n" +
-            "Thinkora ka real AI brain abhi connect hona baaki hai.";
+`I received your question:
+
+"${message}"
+
+🧠 Thinkora AI is thinking...
+
+The real AI brain will be connected next.
+
+Thinkora will then be able to:
+• Understand complex questions
+• Solve problems
+• Explain topics
+• Create notes
+• Generate quizzes
+• Understand images
+• Read PDFs
+• Remember conversations
+• Give fast responses`;
 
         res.json({
             reply: reply
@@ -42,10 +63,15 @@ app.post("/api/chat", async (req, res) => {
 
 });
 
-const PORT = process.env.PORT || 3000;
+
+const PORT =
+    process.env.PORT || 3000;
+
 
 app.listen(PORT, () => {
+
     console.log(
         `Thinkora AI running on port ${PORT}`
     );
+
 });
