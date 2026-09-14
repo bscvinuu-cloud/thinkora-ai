@@ -1078,6 +1078,122 @@ body{
 .newChatBtn:hover {
     transform: translateY(-2px);
 }
+      /* ===== REALISTIC CHAT HISTORY ===== */
+
+#chatHistoryPanel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    max-width: 85%;
+    height: 100vh;
+    z-index: 2000;
+    padding: 22px 16px;
+    background: rgba(10, 12, 24, 0.96);
+    backdrop-filter: blur(25px);
+    border-right: 1px solid rgba(255,255,255,.12);
+    box-shadow: 20px 0 50px rgba(0,0,0,.35);
+    transform: translateX(-105%);
+    transition: transform .3s ease;
+    overflow-y: auto;
+}
+
+#chatHistoryPanel.open {
+    transform: translateX(0);
+}
+
+.historyTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.historyTop h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #fff;
+}
+
+.historyClose {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.historyGroup {
+    margin-bottom: 22px;
+}
+
+.historyLabel {
+    color: #8d93a7;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.historyItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 7px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.06);
+    color: #fff;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.historyItem:hover {
+    background: rgba(128,103,255,.14);
+    border-color: rgba(128,103,255,.3);
+}
+
+.historyIcon {
+    font-size: 17px;
+}
+
+.historyText {
+    flex: 1;
+    min-width: 0;
+}
+
+.historyTitle {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.historyTime {
+    margin-top: 3px;
+    color: #777e94;
+    font-size: 10px;
+}
+
+.historyDelete {
+    border: none;
+    background: transparent;
+    color: #777e94;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.historyEmpty {
+    text-align: center;
+    padding: 35px 10px;
+    color: #73798c;
+    font-size: 13px;
+}
 </style>
 </head>
 
