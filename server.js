@@ -7,7 +7,8 @@ app.use(express.json());
 app.use(express.static("."));
 
 const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    baseURL: "https://router.huggingface.co/v1",
+    apiKey: process.env.HF_TOKEN
 });
 
 app.post("/api/chat", async (req, res) => {
@@ -22,14 +23,17 @@ app.post("/api/chat", async (req, res) => {
             });
         }
 
-        const response = await client.responses.create({
+        const response = await client.chat.completions.create({
 
-            model: "gpt-5.6-sol",
+            model: "openai/gpt-oss-120b:fastest",
 
-            instructions: `
+            messages: [
+                {
+                    role: "system",
+                    content: `
 You are Thinkora AI, a powerful and friendly AI study assistant.
 
-Your developer is INNOCENT VINUU.
+Developer: INNOCENT VINUU.
 
 Help users with:
 - Study
@@ -43,18 +47,26 @@ Help users with:
 - General questions
 
 Answer clearly and intelligently.
-Use simple language when the user asks for simple explanations.
+
 If the user speaks Hindi, answer in Hindi/Hinglish.
 If the user speaks Gujarati, answer in Gujarati.
-Be helpful, accurate and concise.
-`,
+If the user speaks English, answer in English.
 
-            input: message
+Be helpful, accurate and easy to understand.
+`
+                },
+                {
+                    role: "user",
+                    content: message
+                }
+            ]
 
         });
 
+        const reply = response.choices[0].message.content;
+
         res.json({
-            reply: response.output_text
+            reply: reply
         });
 
     } catch (error) {
