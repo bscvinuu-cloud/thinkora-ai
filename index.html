@@ -1051,13 +1051,39 @@ body{
         max-width:90%;
     }
 }
+.newChatBtn {
+    position: fixed;
+    top: 70px;
+    left: 18px;
+    z-index: 1000;
 
+    padding: 10px 16px;
+
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 14px;
+
+    background: rgba(20,18,35,.85);
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow: 0 8px 25px rgba(0,0,0,.3);
+
+    cursor: pointer;
+}
+
+.newChatBtn:hover {
+    transform: translateY(-2px);
+}
 </style>
 </head>
 
 
 <body>
-<button onclick="newChat()">＋ New Chat</button>
+<button class="newChatBtn" onclick="newChat()">＋ New Chat</button>
 <!-- BACKGROUND -->
 
 <div class="background">
