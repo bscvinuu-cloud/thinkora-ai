@@ -1861,7 +1861,36 @@ function newChat() {
     );
       }
       function openHistory() {
+    saveChatHistory();
+
     const panel = document.getElementById("chatHistoryPanel");
+    const list = document.getElementById("historyList");
+
+    const history = JSON.parse(
+        localStorage.getItem("thinkora_chat_history") || "[]"
+    );
+
+    list.innerHTML = "";
+
+    if (!history.length) {
+        list.innerHTML = '<div class="historyEmpty">No chats yet</div>';
+    } else {
+        history.forEach((chat, index) => {
+            const item = document.createElement("div");
+            item.className = "historyItem";
+
+            item.innerHTML = `
+                <div class="historyIcon">💬</div>
+                <div class="historyText">
+                    <div class="historyTitle">Chat ${history.length - index}</div>
+                    <div class="historyTime">${chat.date}</div>
+                </div>
+            `;
+
+            list.appendChild(item);
+        });
+    }
+
     panel.classList.toggle("open");
       }
 </script>
