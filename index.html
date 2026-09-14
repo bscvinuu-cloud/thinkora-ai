@@ -1860,6 +1860,10 @@ function newChat() {
         JSON.stringify(history.slice(0, 20))
     );
       }
+      function openHistory() {
+    const panel = document.getElementById("chatHistoryPanel");
+    panel.classList.toggle("open");
+      }
 </script>
 
 </body>
