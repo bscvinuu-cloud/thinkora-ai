@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0,user-scalable=no">
+
+<meta name="theme-color" content="#070812">
+
+<meta name="description"
+      content="Thinkora AI — Your intelligent study companion.">
+
+<title>Thinkora AI — Think. Learn. Create.</title>
+
+<style>
+
+/* =====================================================
+   THINKORA AI
+   Developed by INNOCENT VINUU
+   ===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#06070d;
+    --bg2:#0a0b14;
+    --card:rgba(255,255,255,.055);
+    --border:rgba(255,255,255,.11);
+    --text:#f7f8ff;
+    --muted:#8d93a7;
+    --purple:#8067ff;
+    --blue:#24d9ff;
+    --pink:#b16cff;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(116,88,255,.20),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(0,211,255,.10),
+            transparent 30%
+        ),
+        var(--bg);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    overflow-x:hidden;
+}
+
+/* ---------- BACKGROUND ---------- */
+
+.background{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+.glow{
+    position:absolute;
+    width:330px;
+    height:330px;
+    border-radius:50%;
+    filter:blur(110px);
+    opacity:.12;
+    animation:floatGlow 12s ease-in-out infinite;
+}
+
+.glow.one{
+    background:#765cff;
+    top:-130px;
+    left:-120px;
+}
+
+.glow.two{
+    background:#00d9ff;
+    right:-150px;
+    bottom:-140px;
+    animation-delay:-5s;
+}
+
+@keyframes floatGlow{
+
+    0%,100%{
+        transform:translate(0,0) scale(1);
+    }
+
+    50%{
+        transform:translate(35px,-25px) scale(1.12);
+    }
+}
+
+/* ---------- APP ---------- */
+
+.app{
+    position:relative;
+    z-index:1;
+
+    width:100%;
+    max-width:1180px;
+
+    min-height:100vh;
+
+    margin:auto;
+
+    padding:
+        18px
+        20px
+        35px;
+}
+
+/* ---------- NAV ---------- */
+
+.navbar{
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    font-weight:900;
+    letter-spacing:2px;
+    font-size:19px;
+}
+
+.brandIcon{
+    width:32px;
+    height:32px;
+
+    border-radius:11px;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8568ff,
+            #25d9ff
+        );
+
+    box-shadow:
+        0 0 25px
+        rgba(119,92,255,.35);
+}
+
+.brandIcon:before{
+    content:"";
+
+    position:absolute;
+
+    width:11px;
+    height:11px;
+
+    border:2px solid white;
+    border-radius:50%;
+
+    top:8px;
+    left:8px;
+}
+
+.brandIcon:after{
+    content:"";
+
+    position:absolute;
+
+    width:5px;
+    height:5px;
+
+    background:white;
+    border-radius:50%;
+
+    top:12px;
+    left:12px;
+}
+
+.brandText{
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #a99aff,
+            #68e9ff
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+}
+
+.aiStatus{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    padding:8px 12px;
+
+    border-radius:30px;
+
+    border:1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.035);
+
+    color:#a8aec1;
+
+    font-size:10px;
+    letter-spacing:.5px;
+}
+
+.statusDot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#55e69a;
+
+    box-shadow:
+        0 0 10px #55e69a;
+
+    animation:statusPulse 2s infinite;
+}
+
+@keyframes statusPulse{
+
+    50%{
+        opacity:.4;
+        transform:scale(.75);
+    }
+}
+
+/* ---------- HERO ---------- */
+
+.hero{
+    text-align:center;
+
+    padding:
+        48px
+        10px
+        25px;
+}
+
+/* ---------- ORB ---------- */
+
+.orbWrap{
+    width:165px;
+    height:165px;
+
+    margin:
+        0 auto
+        22px;
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.orb{
+    width:118px;
+    height:118px;
+
+    border-radius:50%;
+
+    position:relative;
+
+    background:
+        radial-gradient(
+            circle at 34% 25%,
+            #ffffff 0%,
+            #c9c0ff 7%,
+            #8b6dff 20%,
+            #5b3fff 34%,
+            #241858 64%,
+            #080910 74%
+        );
+
+    box-shadow:
+        0 0 35px
+        rgba(121,94,255,.9),
+
+        0 0 85px
+        rgba(103,77,255,.45),
+
+        inset
+        -15px
+        -18px
+        30px
+        rgba(0,0,0,.65);
+
+    animation:
+        orbBreath
+        3.5s
+        ease-in-out
+        infinite;
+}
+
+.orb:before{
+    content:"";
+
+    position:absolute;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    filter:blur(7px);
+
+    top:20px;
+    left:27px;
+
+    opacity:.85;
+}
+
+.orbit{
+    position:absolute;
+
+    border-radius:50%;
+
+    border:1px solid
+        rgba(139,124,255,.45);
+
+    animation:
+        orbitSpin
+        9s
+        linear
+        infinite;
+}
+
+.orbit.one{
+    width:142px;
+    height:142px;
+}
+
+.orbit.two{
+    width:160px;
+    height:160px;
+
+    border-color:
+        rgba(30,217,255,.20);
+
+    animation-duration:13s;
+    animation-direction:reverse;
+}
+
+.orbit:after{
+    content:"";
+
+    position:absolute;
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#8c78ff;
+
+    box-shadow:
+        0 0 12px #8c78ff;
+
+    top:-3px;
+    left:50%;
+}
+
+@keyframes orbBreath{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.055);
+    }
+}
+
+@keyframes orbitSpin{
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ---------- TITLE ---------- */
+
+.title{
+    font-size:
+        clamp(
+            52px,
+            10vw,
+            86px
+        );
+
+    line-height:1;
+
+    letter-spacing:-5px;
+
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            100deg,
+            #ffffff 15%,
+            #c2baff 48%,
+            #65e7ff 90%
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+}
+
+.tagline{
+    margin-top:13px;
+
+    color:#9298aa;
+
+    font-size:16px;
+    letter-spacing:.2px;
+}
+
+/* ---------- ASK BOX ---------- */
+
+.askBox{
+    max-width:780px;
+
+    margin:
+        32px auto
+        0;
+
+    padding:8px;
+
+    display:flex;
+    align-items:flex-end;
+    gap:7px;
+
+    border-radius:24px;
+
+    border:1px solid
+        rgba(255,255,255,.13);
+
+    background:
+        rgba(255,255,255,.045);
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.30);
+
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+
+    transition:.25s;
+}
+
+.askBox:focus-within{
+    border-color:
+        rgba(128,103,255,.55);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(128,103,255,.08),
+        0 25px 80px
+        rgba(0,0,0,.35);
+}
+
+.askTextarea{
+    flex:1;
+
+    min-width:0;
+
+    min-height:52px;
+    max-height:150px;
+
+    padding:
+        15px
+        14px;
+
+    border:none;
+    outline:none;
+    resize:none;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-family:inherit;
+
+    line-height:1.5;
+}
+
+.askTextarea::placeholder{
+    color:#747a8d;
+}
+
+.sendButton{
+    flex:0 0 auto;
+
+    width:52px;
+    height:52px;
+
+    border:none;
+    border-radius:17px;
+
+    color:#fff;
+
+    font-size:21px;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #765cff,
+            #21cfff
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(80,110,255,.28);
+
+    transition:.2s;
+}
+
+.sendButton:hover{
+    transform:translateY(-2px);
+}
+
+.sendButton:active{
+    transform:scale(.94);
+}
+
+/* ---------- QUICK BUTTONS ---------- */
+
+.quickTools{
+    display:flex;
+
+    justify-content:center;
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:13px;
+}
+
+.quickButton{
+    border:1px solid
+        rgba(255,255,255,.10);
+
+    background:
+        rgba(255,255,255,.035);
+
+    color:#aeb4c6;
+
+    border-radius:30px;
+
+    padding:
+        9px
+        13px;
+
+    font-size:12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.quickButton:hover{
+    color:#fff;
+
+    border-color:
+        rgba(132,112,255,.40);
+
+    background:
+        rgba(128,103,255,.08);
+}
+
+/* ---------- STUDY MODES ---------- */
+
+.section{
+    margin-top:34px;
+}
+
+.sectionHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:14px;
+}
+
+.sectionTitle{
+    font-size:15px;
+    font-weight:600;
+
+    color:#e2e5ef;
+}
+
+.sectionSub{
+    color:#62697b;
+    font-size:11px;
+}
+
+.modeGrid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:12px;
+}
+
+.modeCard{
+    min-height:145px;
+
+    padding:19px;
+
+    border-radius:21px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.025)
+        );
+
+    cursor:pointer;
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:
+        transform .25s,
+        border-color .25s,
+        background .25s;
+}
+
+.modeCard:before{
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    border-radius:50%;
+
+    right:-45px;
+    top:-45px;
+
+    background:
+        rgba(123,98,255,.10);
+
+    filter:blur(15px);
+}
+
+.modeCard:hover{
+    transform:translateY(-5px);
+
+    border-color:
+        rgba(135,117,255,.38);
+
+    background:
+        rgba(255,255,255,.075);
+}
+
+.modeIcon{
+    font-size:27px;
+
+    margin-bottom:18px;
+}
+
+.modeCard h3{
+    font-size:14px;
+}
+
+.modeCard p{
+    margin-top:7px;
+
+    color:#808699;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+/* ---------- CHAT ---------- */
+
+.chatSection{
+    display:none;
+
+    max-width:850px;
+
+    margin:
+        38px auto
+        0;
+}
+
+.chatWindow{
+    min-height:260px;
+    max-height:520px;
+
+    overflow-y:auto;
+
+    padding:15px;
+
+    border-radius:23px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    background:
+        rgba(255,255,255,.035);
+
+    backdrop-filter:blur(15px);
+}
+
+.chatWindow::-webkit-scrollbar{
+    width:5px;
+}
+
+.chatWindow::-webkit-scrollbar-thumb{
+    background:#ffffff18;
+    border-radius:10px;
+}
+
+.message{
+    display:flex;
+
+    margin:
+        11px 0;
+}
+
+.message.user{
+    justify-content:flex-end;
+}
+
+.message.ai{
+    justify-content:flex-start;
+}
+
+.bubble{
+    max-width:84%;
+
+    padding:
+        13px
+        15px;
+
+    border-radius:18px;
+
+    font-size:14px;
+
+    line-height:1.65;
+
+    white-space:pre-wrap;
+}
+
+.message.ai .bubble{
+    color:#dce1ed;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.message.user .bubble{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #684fff,
+            #287eff
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(66,83,255,.15);
+}
+
+.thinkingBubble{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.dot{
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:#9b8cff;
+
+    animation:
+        typing
+        1s
+        infinite;
+}
+
+.dot:nth-child(2){
+    animation-delay:.15s;
+}
+
+.dot:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes typing{
+
+    0%,100%{
+        opacity:.25;
+        transform:translateY(0);
+    }
+
+    50%{
+        opacity:1;
+        transform:translateY(-3px);
+    }
+}
+
+/* ---------- CHAT INPUT ---------- */
+
+.chatInput{
+    display:flex;
+
+    gap:7px;
+
+    margin-top:10px;
+
+    padding:7px;
+
+    border-radius:20px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    background:
+        rgba(255,255,255,.045);
+}
+
+.chatTextarea{
+    flex:1;
+
+    min-width:0;
+
+    min-height:48px;
+    max-height:120px;
+
+    padding:
+        13px;
+
+    resize:none;
+
+    outline:none;
+    border:none;
+
+    color:#fff;
+
+    background:transparent;
+
+    font-family:inherit;
+}
+
+.chatTextarea::placeholder{
+    color:#70778a;
+}
+
+.smallSend{
+    width:48px;
+    height:48px;
+
+    border:none;
+
+    border-radius:15px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #765cff,
+            #21cfff
+        );
+
+    cursor:pointer;
+}
+
+/* ---------- FOOTER ---------- */
+
+.footer{
+    text-align:center;
+
+    padding:
+        55px
+        10px
+        18px;
+
+    color:#5e6576;
+
+    font-size:11px;
+}
+
+.footer strong{
+    color:#aeb5c7;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media(max-width:760px){
+
+    .app{
+        padding:
+            14px
+            14px
+            28px;
+    }
+
+    .hero{
+        padding-top:43px;
+    }
+
+    .orbWrap{
+        width:145px;
+        height:145px;
+    }
+
+    .orb{
+        width:105px;
+        height:105px;
+    }
+
+    .orbit.one{
+        width:128px;
+        height:128px;
+    }
+
+    .orbit.two{
+        width:144px;
+        height:144px;
+    }
+
+    .title{
+        font-size:56px;
+        letter-spacing:-4px;
+    }
+
+    .tagline{
+        font-size:15px;
+    }
+
+    .modeGrid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .modeCard{
+        min-height:130px;
+        padding:16px;
+    }
+
+    .modeIcon{
+        margin-bottom:14px;
+    }
+}
+
+@media(max-width:430px){
+
+    .aiStatus{
+        font-size:9px;
+        padding:7px 9px;
+    }
+
+    .brand{
+        font-size:17px;
+    }
+
+    .brandIcon{
+        width:29px;
+        height:29px;
+    }
+
+    .hero{
+        padding-left:0;
+        padding-right:0;
+    }
+
+    .title{
+        font-size:52px;
+    }
+
+    .askBox{
+        border-radius:21px;
+    }
+
+    .modeGrid{
+        gap:9px;
+    }
+
+    .modeCard{
+        min-height:125px;
+    }
+
+    .bubble{
+        max-width:90%;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- BACKGROUND -->
+
+<div class="background">
+
+    <div class="glow one"></div>
+
+    <div class="glow two"></div>
+
+</div>
+
+
+<div class="app">
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brandIcon"></div>
+
+        <div class="brandText">
+            THINKORA
+        </div>
+
+    </div>
+
+
+    <div class="aiStatus">
+
+        <span class="statusDot"></span>
+
+        THINKORA AI
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+
+    <div class="orbWrap">
+
+        <div class="orbit one"></div>
+
+        <div class="orbit two"></div>
+
+        <div class="orb"></div>
+
+    </div>
+
+
+    <h1 class="title">
+        Thinkora
+    </h1>
+
+
+    <p class="tagline">
+        Think. Learn. Create.
+    </p>
+
+
+
+    <!-- ASK -->
+
+    <div class="askBox">
+
+        <textarea
+            id="mainQuestion"
+            class="askTextarea"
+            placeholder="What are you curious about?"
+            rows="1"
+            onkeydown="mainEnter(event)"
+        ></textarea>
+
+
+        <button
+            class="sendButton"
+            onclick="sendMainQuestion()"
+            aria-label="Send"
+        >
+            ➜
+        </button>
+
+    </div>
+
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="quickTools">
+
+        <button
+            class="quickButton"
+            onclick="setQuestion('Explain this topic to me simply')"
+        >
+            🧠 Explain
+        </button>
+
+
+        <button
+            class="quickButton"
+            onclick="setQuestion('Make short and useful exam notes')"
+        >
+            📝 Make Notes
+        </button>
+
+
+        <button
+            class="quickButton"
+            onclick="setQuestion('Create a quiz for me')"
+        >
+            ❓ Create Quiz
+        </button>
+
+
+        <button
+            class="quickButton"
+            onclick="setQuestion('Make a study plan for my exam')"
+        >
+            🎯 Study Plan
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= STUDY MODES ================= -->
+
+<section class="section">
+
+
+    <div class="sectionHeader">
+
+        <div class="sectionTitle">
+            Choose your thinking mode
+        </div>
+
+        <div class="sectionSub">
+            Learn smarter
+        </div>
+
+    </div>
+
+
+
+    <div class="modeGrid">
+
+
+        <div
+            class="modeCard"
+            onclick="setQuestion(
+                'Teach me a difficult topic like I am a beginner'
+            )"
+        >
+
+            <div class="modeIcon">
+                🧠
+            </div>
+
+            <h3>
+                Learn
+            </h3>
+
+            <p>
+                Understand difficult concepts
+                in simple words.
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="modeCard"
+            onclick="setQuestion(
+                'Help me solve this question step by step'
+            )"
+        >
+
+            <div class="modeIcon">
+                💡
+            </div>
+
+            <h3>
+                Solve
+            </h3>
+
+            <p>
+                Get clear step-by-step
+                solutions.
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="modeCard"
+            onclick="setQuestion(
+                'Make revision notes for my chapter'
+            )"
+        >
+
+            <div class="modeIcon">
+                📚
+            </div>
+
+            <h3>
+                Study
+            </h3>
+
+            <p>
+                Turn chapters into powerful
+                revision material.
+            </p>
+
+        </div>
+
+
+
+        <div
+            class="modeCard"
+            onclick="setQuestion(
+                'Create 10 MCQ questions with answers'
+            )"
+        >
+
+            <div class="modeIcon">
+                ✨
+            </div>
+
+            <h3>
+                Create
+            </h3>
+
+            <p>
+                Generate quizzes, ideas,
+                plans and more.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= CHAT ================= -->
+
+<section
+    class="chatSection"
+    id="chatSection"
+>
+
+
+    <div
+        class="chatWindow"
+        id="chatWindow"
+    ></div>
+
+
+
+    <div class="chatInput">
+
+        <textarea
+            id="chatQuestion"
+            class="chatTextarea"
+            placeholder="Continue your thought..."
+            rows="1"
+            onkeydown="chatEnter(event)"
+        ></textarea>
+
+
+        <button
+            class="smallSend"
+            onclick="sendChatQuestion()"
+        >
+            ➜
+        </button>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    Thinkora AI ·
+
+    <strong>
+        Developed by INNOCENT VINUU
+    </strong>
+
+</footer>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   THINKORA AI FRONTEND
+   Developed by INNOCENT VINUU
+   ===================================================== */
+
+
+const mainQuestion =
+    document.getElementById(
+        "mainQuestion"
+    );
+
+
+const chatQuestion =
+    document.getElementById(
+        "chatQuestion"
+    );
+
+
+const chatSection =
+    document.getElementById(
+        "chatSection"
+    );
+
+
+const chatWindow =
+    document.getElementById(
+        "chatWindow"
+    );
+
+
+
+/* ---------- AUTO TEXTAREA HEIGHT ---------- */
+
+function autoHeight(element){
+
+    element.style.height =
+        "auto";
+
+    element.style.height =
+        Math.min(
+            element.scrollHeight,
+            150
+        ) + "px";
+}
+
+
+mainQuestion.addEventListener(
+    "input",
+    function(){
+
+        autoHeight(this);
+
+    }
+);
+
+
+chatQuestion.addEventListener(
+    "input",
+    function(){
+
+        autoHeight(this);
+
+    }
+);
+
+
+
+/* ---------- ENTER ---------- */
+
+function mainEnter(event){
+
+    if(
+        event.key === "Enter" &&
+        !event.shiftKey
+    ){
+
+        event.preventDefault();
+
+        sendMainQuestion();
+
+    }
+
+}
+
+
+function chatEnter(event){
+
+    if(
+        event.key === "Enter" &&
+        !event.shiftKey
+    ){
+
+      
