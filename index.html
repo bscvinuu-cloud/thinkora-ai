@@ -1698,6 +1698,25 @@ function newChat() {
 
     mainQuestion.focus();
 }
+      function saveChatHistory() {
+    const messages = chatWindow.innerHTML;
+
+    if (!messages.trim()) return;
+
+    const history = JSON.parse(
+        localStorage.getItem("thinkora_chat_history") || "[]"
+    );
+
+    history.unshift({
+        date: new Date().toLocaleString(),
+        messages: messages
+    });
+
+    localStorage.setItem(
+        "thinkora_chat_history",
+        JSON.stringify(history.slice(0, 20))
+    );
+      }
 </script>
 
 </body>
