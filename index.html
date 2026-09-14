@@ -1374,96 +1374,210 @@ body{
 
 <script>
 
-/* =====================================================
-   THINKORA AI FRONTEND
-   Developed by INNOCENT VINUU
-   ===================================================== */
+const mainQuestion = document.getElementById("mainQuestion");
+const chatQuestion = document.getElementById("chatQuestion");
+const chatSection = document.getElementById("chatSection");
+const chatWindow = document.getElementById("chatWindow");
 
-
-const mainQuestion =
-    document.getElementById(
-        "mainQuestion"
-    );
-
-
-const chatQuestion =
-    document.getElementById(
-        "chatQuestion"
-    );
-
-
-const chatSection =
-    document.getElementById(
-        "chatSection"
-    );
-
-
-const chatWindow =
-    document.getElementById(
-        "chatWindow"
-    );
-
-
-
-/* ---------- AUTO TEXTAREA HEIGHT ---------- */
-
-function autoHeight(element){
-
+function autoHeight(element) {
+    element.style.height = "auto";
     element.style.height =
-        "auto";
-
-    element.style.height =
-        Math.min(
-            element.scrollHeight,
-            150
-        ) + "px";
+        Math.min(element.scrollHeight, 150) + "px";
 }
 
+mainQuestion.addEventListener("input", function() {
+    autoHeight(this);
+});
 
-mainQuestion.addEventListener(
-    "input",
-    function(){
+chatQuestion.addEventListener("input", function() {
+    autoHeight(this);
+});
 
-        autoHeight(this);
-
-    }
-);
-
-
-chatQuestion.addEventListener(
-    "input",
-    function(){
-
-        autoHeight(this);
-
-    }
-);
-
-
-
-/* ---------- ENTER ---------- */
-
-function mainEnter(event){
-
-    if(
-        event.key === "Enter" &&
-        !event.shiftKey
-    ){
-
+function mainEnter(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
-
         sendMainQuestion();
-
     }
-
 }
 
+function chatEnter(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendChatQuestion();
+    }
+}
 
-function chatEnter(event){
+function setQuestion(text) {
+    mainQuestion.value = text;
+    autoHeight(mainQuestion);
+    mainQuestion.focus();
+}
 
-    if(
-        event.key === "Enter" &&
-        !event.shiftKey
-    ){
+function showThinking() {
+    return `
+        <div class="thinkingBubble">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    `;
+}
+
+function addMessage(text, type) {
+
+    const message = document.createElement("div");
+    message.className = "message " + type;
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    message.appendChild(bubble);
+    chatWindow.appendChild(message);
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+async function sendMainQuestion() {
+
+    const message = mainQuestion.value.trim();
+
+    if (!message) return;
+
+    chatSection.style.display = "block";
+
+    addMessage(message, "user");
+
+    mainQuestion.value = "";
+    autoHeight(mainQuestion);
+
+    const thinking = document.createElement("div");
+
+    thinking.className = "message ai";
+
+    thinking.innerHTML =
+        `<div class="bubble">${showThinking()}</div>`;
+
+    chatWindow.appendChild(thinking);
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    try {
+
+        const response = await fetch("/api/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+
+        });
+
+        const data = await response.json();
+
+        thinking.remove();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "Server error"
+            );
+        }
+
+        addMessage(
+            data.reply || "No response received.",
+            "ai"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        thinking.remove();
+
+        addMessage(
+            "⚠️ Thinkora server se response nahi mila. Please try again.",
+            "ai"
+        );
+    }
+}
+
+async function sendChatQuestion() {
+
+    const message = chatQuestion.value.trim();
+
+    if (!message) return;
+
+    addMessage(message, "user");
+
+    chatQuestion.value = "";
+    autoHeight(chatQuestion);
+
+    const thinking = document.createElement("div");
+
+    thinking.className = "message ai";
+
+    thinking.innerHTML =
+        `<div class="bubble">${showThinking()}</div>`;
+
+    chatWindow.appendChild(thinking);
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    try {
+
+        const response = await fetch("/api/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+
+        });
+
+        const data = await response.json();
+
+        thinking.remove();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "Server error"
+            );
+        }
+
+        addMessage(
+            data.reply || "No response received.",
+            "ai"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        thinking.remove();
+
+        addMessage(
+            "⚠️ Something went wrong. Please try again.",
+            "ai"
+        );
+    }
+}
+
+</script>
+
+</body>
+</html>
+
+
+
 
       
