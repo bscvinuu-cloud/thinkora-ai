@@ -15,11 +15,11 @@ app.post("/api/chat", async (req, res) => {
 
     try {
 
-        const message = req.body.message;
+        const messages = req.body.messages;
 
-        if (!message) {
+        if (!Array.isArray(messages) || messages.length === 0) {
             return res.status(400).json({
-                error: "Message is required"
+                error: "Messages are required"
             });
         }
 
@@ -31,7 +31,7 @@ app.post("/api/chat", async (req, res) => {
                 {
                     role: "system",
                     content: `
-You are Thinkora AI, a powerful and friendly AI study assistant.
+You are Thinkora AI, a powerful, friendly and intelligent AI study assistant.
 
 Developer: INNOCENT VINUU.
 
@@ -46,6 +46,8 @@ Help users with:
 - Explanations
 - General questions
 
+Remember the conversation context and use previous messages when answering.
+
 Answer clearly and intelligently.
 
 If the user speaks Hindi, answer in Hindi/Hinglish.
@@ -55,10 +57,7 @@ If the user speaks English, answer in English.
 Be helpful, accurate and easy to understand.
 `
                 },
-                {
-                    role: "user",
-                    content: message
-                }
+                ...messages
             ]
 
         });
